@@ -20,6 +20,11 @@ db.sequelize.sync({force: true}).then(() => {
 
 require('./app/route/customer.route.js')(app);
 
+// demo route
+app.get("/", (req, res) => {
+    res.json({message: "First connection is ok!"});
+});
+
 // Create Server
 var server = app.listen(3000, function() {
     var host = server.address().address

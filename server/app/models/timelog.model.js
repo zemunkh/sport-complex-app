@@ -1,6 +1,6 @@
 const { sequelize, Sequelize } = require("../config/db.config");
 
-module.exports = (sequelize ) => {
+module.exports = (sequelize, Sequelize) => {
     const TimeLog = sequelize.define('timelog', {
         customerId: {
             type: Sequelize.STRING,
@@ -17,6 +17,9 @@ module.exports = (sequelize ) => {
         lockerNumber: {
             type: Sequelize.STRING,
         },
+        isActive: {
+            type: Sequelize.BOOLEAN
+        }
     });
 
     return TimeLog;

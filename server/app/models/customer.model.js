@@ -18,9 +18,6 @@ module.exports = (sequelize, Sequelize) => {
         testStartDate: {
             type: Sequelize.DATE,
         },
-        testExpiryDate: {
-            type: Sequelize.DATE,
-        },
         department: {
             type: Sequelize.STRING,
         },
@@ -30,9 +27,9 @@ module.exports = (sequelize, Sequelize) => {
         phoneNumber: {
             type: Sequelize.STRING,
         },
-        createdOn: {
-            type: Sequelize.DATE,
-        }
+        createdAt: {
+            type: Sequelize.DATETIME,
+        },
     });
 
     return Customer;

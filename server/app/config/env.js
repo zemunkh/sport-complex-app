@@ -1,7 +1,7 @@
 const env = {
     database: 'sportcenterdb',
     username: 'root',
-    password: '54321',
+    password: 'capitolcia',
     host: 'localhost',
     dialect: 'mysql',
     pool: {
