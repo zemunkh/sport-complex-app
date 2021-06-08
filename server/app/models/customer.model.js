@@ -27,9 +27,9 @@ module.exports = (sequelize, Sequelize) => {
         phoneNumber: {
             type: Sequelize.STRING,
         },
-        createdAt: {
-            type: Sequelize.DATETIME,
-        },
+        // createdAt: {
+        //     type: Sequelize.DATETIME,
+        // }
     });
 
     return Customer;
