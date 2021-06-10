@@ -9,12 +9,15 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-const cors = require('cors');
-const corsOptions = {
-    origin: 'http://localhost:3030',
-    optionsSuccessStatus: 200,
+
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    next();
 }
-app.use(cors(corsOptions));
+
+app.use(allowCrossDomain)
 
 
 const DB = require('./app/admin-db/db.js');
@@ -32,31 +35,8 @@ adminDb.selectAll((err, rows) => {
 //     console.log('Successfully deleted!');
 // })
 
-// router.post('/register-admin', async function(req, res) {
-//     console.log("non hashed pass: ", req.body.password);
-//     console.log("username: ", req.body.username);
-//     // Insert: username, email, bcrypt hash
-    
-//     bcrypt.hash(req.body.password, 10, function(err, hash) {
-//         console.log("Hash: ", hash);
-//         adminDb.insert([
-//             'reception',
-//             hash,
-//         ],
-
-//         function(err) {
-//             if(err) return res.status(500).send("Problem occured during registering Admin");
-//             adminDb.selectByUsername(req.body.username, (err, user) => {
-//                 if(err) return res.status(500).send("Problem to get user");
-//                 console.log("User ", user);
-//                 let token = jwt.sign({id:  user.id}, config.secret, { expiresIn: 86400});
-//                 res.status(200).send({auth: true, token: token, user: user});
-//             })
-//         });
-//     });
-// });
-
 router.post('/login', (req, res) => {
+    console.log('We got post request');
     adminDb.selectByUsername(req.body.username, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
@@ -82,7 +62,7 @@ router.get('/getInfo', (req, res) => {
 })
 
 
-app.use(router);
+app.use('/', router);
 
 const db = require('./app/config/db.config.js');
 
@@ -98,9 +78,9 @@ app.get("/", (req, res) => {
     res.json({message: "First connection is ok!"});
 });
 
+let port = process.env.PORT || 3000;
 // Create Server
-var server = app.listen(3000, function() {
-    var host = server.address().address
+var server = app.listen(port, function() {
     var port = server.address().port
-    console.log("App listening at http://%s%s", host, port);
+    console.log("App listening at http://localhost:%s", port);
 });
