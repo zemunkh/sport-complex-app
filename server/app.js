@@ -52,12 +52,17 @@ router.post('/api/login', (req, res) => {
     });
 })
 
+router.post('/api/logout', (req, res) => {
+    console.log('Token: %s', req.body.token);
+    res.status(200).send({ res: 'success' })
+})
+
 router.get('/api/getInfo', (req, res) => {
     console.log('Info req: %s', req.body.username);
-    adminDb.selectByUsername(req.query.username, (err, user) => {
+    adminDb.selectByUsername(req.body.username, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
-        if(user.password == req.query.token) {
+        if(user.password == req.body.token) {
             res.status(200).send({ user: user });
         } else {
             res.status(404).send('Authentication failed');
