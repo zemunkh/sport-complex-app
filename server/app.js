@@ -4,12 +4,14 @@ const config = require('./config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const cors = require('cors');
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 
+app.use(cors());
 const allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', '*');
@@ -35,8 +37,8 @@ adminDb.selectAll((err, rows) => {
 //     console.log('Successfully deleted!');
 // })
 
-router.post('/login', (req, res) => {
-    console.log('We got post request');
+router.post('/api/login', (req, res) => {
+    console.log('We got post request. Data: %s', req.body.username);
     adminDb.selectByUsername(req.body.username, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
@@ -44,11 +46,14 @@ router.post('/login', (req, res) => {
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
         let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 // expires in 24 hours
         });
+        // console.log('User: ', user);
+        // res.status(200).send({ auth: true, token: token, user: user });
         res.status(200).send({ auth: true, token: token, user: user });
     });
 })
 
-router.get('/getInfo', (req, res) => {
+router.get('/api/getInfo', (req, res) => {
+    console.log('Info req: %s', req.body.username);
     adminDb.selectByUsername(req.query.username, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
